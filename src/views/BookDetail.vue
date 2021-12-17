@@ -20,31 +20,74 @@
         <form>
           <div class="mt-3">
             <label for="isbn" class="form-label">ISBN</label>
-            <input type="text" class="form-control" id="isbn">
+            <input type="text" class="form-control" id="isbn" v-model="isbn">
             <div id="isbnHelp" class="form-text text-primary">바코드스캐너를 이용하세요.</div>
           </div>
           <div class="mt-3">
             <label for="coverImage" class="form-label">표지 이미지</label>
-            <input type="text" class="form-control" id="coverImage">
+            <input type="text" class="form-control" id="coverImage" v-model="img">
           </div>
           <div class="mt-3">
             <label for="bookTitle" class="form-label">제목</label>
-            <input type="text" class="form-control" id="bookTitle">
+            <input type="text" class="form-control" id="bookTitle" v-model="title">
           </div>
           <div class="mt-3">
             <label for="author" class="form-label">저자</label>
-            <input type="text" class="form-control" id="author">
+            <input type="text" class="form-control" id="author" v-model="author">
           </div>
           <div class="mt-3">
             <label for="publisher" class="form-label">출판사</label>
-            <input type="text" class="form-control" id="publisher">
+            <input type="text" class="form-control" id="publisher" v-model="publisher">
           </div>
           <div class="mt-3">
-            <label for="publisher" class="form-label">서고</label>
-            <input type="text" class="form-control" id="publisher">
+            <label for="library" class="form-label">서고</label>
+            <input type="text" class="form-control" id="library">
           </div>
         </form>
       </div>
     </main>
   </div>
 </template>
+<script>
+//import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      isbn: '',
+      bookInfo: [],
+      img: '',
+      title: '',
+      author: '',
+      publisher: '',
+      library: ''
+    }
+  },
+  watch:{
+    isbn() {
+      this.getBookInfo();
+    }
+  },
+  created() {
+    
+  },
+  methods: {
+    async getBookInfo() {
+      //this.bookList = await this.$api("http://localhost:8001/book","get");
+      let url = "http://localhost:8001/search/d_isbn/" + this.isbn;
+      console.log(this.isbn);
+      console.log(url);
+      let bookInfo = await this.$api(url,"get");
+      
+
+      console.log(bookInfo);
+      //console.log(bookInfo.rss.channel.item.title._text);
+      this.title = bookInfo.rss.channel.item.title._text;
+      this.author = bookInfo.rss.channel.item.author._text;
+      this.publisher = bookInfo.rss.channel.item.publisher._text;
+      this.img = bookInfo.rss.channel.item.image._text;
+      console.log(this.title, this.author, this.publisher, this.img);
+    },
+  }
+}
+</script>
