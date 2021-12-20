@@ -12,7 +12,7 @@
               <div class="card-body">
                 <h2 class="card-title">도서 등록/수정</h2>
                 <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-                <a href="#" class="btn btn-primary">도서 등록/수정</a>
+                <a href="#" class="btn btn-primary" @click="enter">도서 등록/수정</a>
               </div>
             </div>
           </div>
@@ -20,12 +20,15 @@
         <form>
           <div class="mt-3">
             <label for="isbn" class="form-label">ISBN</label>
-            <input type="text" class="form-control" id="isbn" v-model="isbn">
+            <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfo" autofocus>
             <div id="isbnHelp" class="form-text text-primary">바코드스캐너를 이용하세요.</div>
           </div>
-          <div class="mt-3">
+          <div class="mt-3" v-show="imgSrc">
             <label for="coverImage" class="form-label">표지 이미지</label>
-            <input type="text" class="form-control" id="coverImage" v-model="img">
+            <!-- <input type="text" class="form-control" id="coverImage" v-model="imgSrc"> -->
+            <div>
+              <img :src=imgSrc class="img-thumbnail" alt="이미지를 찾을 수 없습니다.">
+            </div>
           </div>
           <div class="mt-3">
             <label for="bookTitle" class="form-label">제목</label>
@@ -41,7 +44,7 @@
           </div>
           <div class="mt-3">
             <label for="library" class="form-label">서고</label>
-            <input type="text" class="form-control" id="library">
+            <input type="text" class="form-control" id="library" placeholder="헉신지원팀 캐비넷" v-model="library">
           </div>
         </form>
       </div>
@@ -54,39 +57,53 @@
 export default {
   data() {
     return {
+      books: [],
       isbn: '',
-      bookInfo: [],
-      img: '',
+      imgSrc: '',
       title: '',
       author: '',
       publisher: '',
       library: ''
     }
   },
-  watch:{
-    isbn() {
-      this.getBookInfo();
-    }
-  },
   created() {
+    //this.getBookList();
+    /* axios.get('https://api.hnpwa.com/v0/news/1.json')
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      }); */
+  },
+  mounted() {
     
   },
   methods: {
     async getBookInfo() {
-      //this.bookList = await this.$api("http://localhost:8001/book","get");
       let url = "http://localhost:8001/search/d_isbn/" + this.isbn;
-      console.log(this.isbn);
       console.log(url);
-      let bookInfo = await this.$api(url,"get");
-      
-
-      console.log(bookInfo);
-      //console.log(bookInfo.rss.channel.item.title._text);
-      this.title = bookInfo.rss.channel.item.title._text;
-      this.author = bookInfo.rss.channel.item.author._text;
-      this.publisher = bookInfo.rss.channel.item.publisher._text;
-      this.img = bookInfo.rss.channel.item.image._text;
-      console.log(this.title, this.author, this.publisher, this.img);
+      let book = await this.$api(url, "get", {});
+      console.log(book);
+      this.imgSrc = book.rss.channel.item.image._text;
+      this.title = book.rss.channel.item.title._text;
+      this.author = book.rss.channel.item.author._text;
+      this.publisher = book.rss.channel.item.publisher._text;
+      document.getElementById("library").focus();
+    },
+    enter() {
+      console.log('entered');
+    },
+    async getBookAdd() {
+       console.log('entered');
+      let url = "http://localhost:8001/book/d_isbn/" + this.isbn;
+      console.log(url);
+      let book = await this.$api(url, "get", {});
+      console.log(book);
+      this.imgSrc = book.rss.channel.item.image._text;
+      this.title = book.rss.channel.item.title._text;
+      this.author = book.rss.channel.item.author._text;
+      this.publisher = book.rss.channel.item.publisher._text;
     },
   }
 }
