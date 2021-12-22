@@ -8,10 +8,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <router-link class="nav-link" aria-current="page" to="/home">Home</router-link>
+                <router-link class="nav-link active" to="/home">Home</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link active" to="/detail">도서 조회/추가</router-link>
+                <router-link class="nav-link" to="/list">도서 조회/추가</router-link>
               </li>
               <li class="nav-item">
                 <router-link class="nav-link disabled" to="/home">반납</router-link>

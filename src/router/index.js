@@ -3,6 +3,7 @@ import BookHome from '../views/BookHome.vue'
 import About from '../views/About.vue'
 import BookList from '../views/BookList.vue'
 import BookDetail from '../views/BookDetail.vue'
+import BookAdd from '../views/BookAdd.vue'
 
 const routes = [
   {
@@ -25,10 +26,16 @@ const routes = [
     /* component: () => import(/* webpackChunkName: "about" '../views/About.vue') */
   },
   {
-    path: '/addbook',
-    name: 'AddBook',
+    path: '/detail',
+    name: 'DetailBook',
     component: BookDetail
   },
+  {
+    path: '/addbook',
+    name: 'AddBook',
+    component: BookAdd
+  },
+  
   {
     path: '/about',
     name: 'About',

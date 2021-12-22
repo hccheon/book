@@ -12,7 +12,7 @@
               <div class="card-body">
                 <h2 class="card-title">도서 등록/수정</h2>
                 <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-                <a href="#" class="btn btn-primary" @click="postBookModify(id)">도서 등록/수정</a>
+                <a href="#" class="btn btn-primary" @click="postBookAdd(isbn)">도서 등록/수정</a>
               </div>
             </div>
           </div>
@@ -20,7 +20,7 @@
         <form>
           <div class="mt-3">
             <label for="isbn" class="form-label">ISBN</label>
-            <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfoDB(isbn)" autofocus>
+            <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfo(isbn)" autofocus>
             <div id="isbnHelp" class="form-text text-primary">바코드스캐너를 이용하세요.</div>
           </div>
           <div class="mt-3" v-show="imgSrc">
@@ -44,7 +44,7 @@
           </div>
           <div class="mt-3">
             <label for="library" class="form-label">서고</label>
-            <input type="text" class="form-control" id="library" placeholder="혁신지원팀 캐비넷" v-model="library">
+            <input type="text" class="form-control" id="library" placeholder="헉신지원팀 캐비넷" v-model="library">
           </div>
         </form>
       </div>
@@ -63,12 +63,11 @@ export default {
       title: '',
       author: '',
       publisher: '',
-      library: '',
-      id: ''
+      library: ''
     }
   },
   created() {
-    
+    //this.getBookList();
     /* axios.get('https://api.hnpwa.com/v0/news/1.json')
       .then(function(response) {
         console.log(response);
@@ -76,16 +75,9 @@ export default {
       .catch(function(error) {
         console.log(error);
       }); */
-      this.isbn =  this.$route.query.isbn;
-      this.getBookInfoDB(this.isbn);
   },
   mounted() {
-    //this.getBookInfo();
-    if (this.isbn != '') {
-      //console.log(this.isbn);
-      //this.getBookInfo(this.isbn);
-    }
-    //document.getElementById("isbn").focus();
+    
   },
   methods: {
     async getBookInfo(isbn) {
@@ -97,30 +89,19 @@ export default {
       this.title = book.rss.channel.item.title._text;
       this.author = book.rss.channel.item.author._text;
       this.publisher = book.rss.channel.item.publisher._text;
-      //this.id = book.rss.channel.item._id._text;
-      document.getElementById("library").focus();
+      //document.getElementById("library").focus();
     },
-    async getBookInfoDB(isbn) {
-      let url = "http://localhost:8001/book/isbn/" + isbn;
-      //console.log(url);
-      let book = await this.$api(url, "get", {});
-      console.log(book.output[0]);
-      this.books = book.output;
-      this.title = book.output[0].title;
-      this.author = book.output[0].author;
-      this.publisher = book.output[0].publisher;
-      this.id = book.output[0]._id;
-      document.getElementById("library").focus();
+    enter() {
+      console.log('entered');
     },
-    async postBookModify(id) {
-      let url = "http://localhost:8001/book/modify";
+    async postBookAdd(isbn) {
+      let url = "http://localhost:8001/book/";
       let bookInfo = {
         "title": this.title, 
         "author": this.author, 
         "publisher": this.publisher, 
         "link": this.imgSrc, 
-        "isbn": this.isbn,
-        "_id": id
+        "isbn": isbn, 
       };
       console.log(bookInfo);
       let book = await this.$api(url, "post", bookInfo);
