@@ -1,4 +1,5 @@
 <template>
+  <!-- <Modal v-if="isModalAct" @close-modal="closeModal" />> -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <router-link class="navbar-brand" to="/home">도서관리</router-link>
@@ -11,7 +12,7 @@
                 <router-link class="nav-link active" to="/home">Home</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/list">도서 조회/추가</router-link>
+                <router-link class="nav-link" to="/list" @openModal="eventTest">도서 조회/추가</router-link>
               </li>
               <li class="nav-item">
                 <router-link class="nav-link disabled" to="/home">반납</router-link>
@@ -20,8 +21,8 @@
                 <router-link class="nav-link disabled" to="/home">대출</router-link>
               </li>
             </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex" @submit.prevent="search(this.searchText)">
+              <input class="form-control me-2" type="search" placeholder="Search" v-model="searchText" >
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
           </div>
@@ -29,6 +30,47 @@
       </nav>
   <router-view/>
 </template>
+
+<script>
+// import { defineComponent } from '@vue/composition-api'
+//import Modal from './components/Modal.vue';
+
+export default {
+  data() {
+    return {
+      searchText: '',
+    }
+  },
+  methods: {
+    eventTest() {
+      console.log('success');
+    },
+
+    search(searchText) {
+      //console.log('search');
+      console.log(searchText);
+      //this.searchText = '';
+      //document.getElementsByName("SearchInput").reset;
+      //this.$router.push({path:'/search', query:{}});
+      this.$router.push({path:'/search', query:{pa:searchText}});
+    }
+
+    /* openModal(isbn) {
+      console.log('app=' + isbn);
+      this.stateId = isbn;
+      this.isModalAct = true;
+    },
+    closeModal() {
+      this.stateId = '';
+      this.isModalAct =false;
+    } */
+  },
+  components: {
+    //Modal
+  }
+}
+</script>
+
 
 <style>
 #app {

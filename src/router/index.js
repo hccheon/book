@@ -4,11 +4,12 @@ import About from '../views/About.vue'
 import BookList from '../views/BookList.vue'
 import BookDetail from '../views/BookDetail.vue'
 import BookAdd from '../views/BookAdd.vue'
+import BookSearch from '../views/BookSearch.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Root',
     component: BookHome
   },
   {
@@ -35,7 +36,11 @@ const routes = [
     name: 'AddBook',
     component: BookAdd
   },
-  
+  {
+    path: '/search',
+    name: 'SearchBook',
+    component: BookSearch
+  },
   {
     path: '/about',
     name: 'About',

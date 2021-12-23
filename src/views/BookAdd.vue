@@ -106,6 +106,7 @@ export default {
       console.log(book);
       this.isbn = '';
       document.getElementById("isbn").focus();
+      //this.$router.push({path:'/list', query:{}}); 
     },
   }
 }

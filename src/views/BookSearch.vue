@@ -10,9 +10,9 @@
                             <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
                         </svg>
                         <div class="card-body">
-                          <h2 class="card-title">도서</h2>
+                          <h2 class="card-title">검색 결과{{ searchValue }}</h2>
                           <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-                          <router-link to="/addbook" class="btn btn-primary">Add Item</router-link>
+                          <!-- <router-link to="/addbook" class="btn btn-primary">Add Item</router-link> -->
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                 </thead>
                 <tbody>
                   <!-- <tr :key="i" v-for="(book, i) in books" @click="addRowHandlers"> -->
-                  <tr :key="i" v-for="(book, i) in books" @click="goToDetail(book.isbn, book._id)">
+                  <tr :key="i" v-for="(book, i) in books">
                     <th scope="row">{{ i+1 }}</th>
                     <!-- <td><img :src="`{{ book.link }}`" alt="빈표지" width="25px" height="25px">{{ imSrc }}</td> -->
                     <!-- <td>{{ book.link }}</td> -->
@@ -96,15 +96,21 @@ export default {
       isbn: '',
       bookDetail: [],
       bookDelete: [],
+      param: '9791165920760'
     }
   },
   props: {
-    bookSelect: Object
+    /* searchString: {
+        type: String,
+    } */
   },
   components: {
   },
   created() {
-    this.getBooklist();
+    console.log('params= ' + this.$route.query.pa);
+    this.param = this.$route.query.pa;
+    this.getBookSearch(this.param);
+    //console.log(this.searchValue);
     /* axios.get('https://api.hnpwa.com/v0/news/1.json')
       .then(function(response) {
         console.log(response);
@@ -126,17 +132,10 @@ export default {
       if(window.confirm(title + "삭제하시겠습니까?")){
         //this.goToDelete(this.isbn);
         //console.log("del");
-        this.goToDelete(isbn);
-        this.$router.push({path:'/list', query:{}});
+        this.goToDelete(isbn)
       }
-      
       // this.$store.commit('currenrBook()');
       //this.$emit('openModal', isbn);
-    },
-
-    test: function(book) {
-      alert(book.title);
-      //페이지 이동
     },
     
     addRowHandlers() {
@@ -177,6 +176,12 @@ export default {
       this.books = book.output;
       //console.log(this.books);
     },
+    async getBookSearch(param) {
+      let url = "http://127.0.0.1:8001/book/isbn/" + param;
+      let book = await this.$api(url, "get", {});
+      this.books = book.output;
+      //console.log(this.books);
+    },
     async getBookDetail(isbn) {
       let bookDetail = await this.$api("http://localhost:8001/book/isbn/" + isbn, "get", {});
       if(bookDetail.rows > 0) {
@@ -192,11 +197,8 @@ export default {
       let bookDelete = await this.$api("http://localhost:8001/book/", "delete", {isbn});
       if(bookDelete.rows > 0) {
         this.bookDelete = bookDelete.output;
-        console.log("if");
       }
       this.getBooklist();
-      
-      
       //console.log("this.bookDelete");
       //console.log(this.bookDelete);
     },
