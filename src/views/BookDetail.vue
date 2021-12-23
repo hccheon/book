@@ -27,7 +27,7 @@
             <label for="coverImage" class="form-label">표지 이미지</label>
             <!-- <input type="text" class="form-control" id="coverImage" v-model="imgSrc"> -->
             <div>
-              <img :src=imgSrc class="img-thumbnail" alt="이미지를 찾을 수 없습니다.">
+              <img :src=imgSrc class="img-responsive" alt="이미지를 찾을 수 없습니다.">
             </div>
           </div>
           <div class="mt-3">
@@ -161,3 +161,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+  img {
+    
+      
+    
+  }
+</style>

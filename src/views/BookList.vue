@@ -50,14 +50,14 @@
                 </thead>
                 <tbody>
                   <!-- <tr :key="i" v-for="(book, i) in books" @click="addRowHandlers"> -->
-                  <tr :key="i" v-for="(book, i) in books" @click="goToDetail(book.isbn, book._id)">
+                  <tr :key="i" v-for="(book, i) in books" >
                     <th scope="row">{{ i+1 }}</th>
                     <!-- <td><img :src="`{{ book.link }}`" alt="빈표지" width="25px" height="25px">{{ imSrc }}</td> -->
                     <!-- <td>{{ book.link }}</td> -->
-                    <td>{{ book.title }}</td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.publisher }}</td>
-                    <td>{{ book.isbn }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.title }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.author }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.publisher }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.isbn }}</td>
                     <td>
                       <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                         <button class="btn btn-warning me-md-2" type="button" @click="goToDetail(book.isbn, book._id);">
@@ -103,6 +103,9 @@ export default {
   },
   components: {
   },
+  computed: {
+    
+  },
   created() {
     this.getBooklist();
     /* axios.get('https://api.hnpwa.com/v0/news/1.json')
@@ -123,16 +126,18 @@ export default {
   },
   methods: {
     sendModal(isbn, title) {
-      if(window.confirm(title + "삭제하시겠습니까?")){
+      if(window.confirm(title + " 삭제하시겠습니까?")){
         //this.goToDelete(this.isbn);
         //console.log("del");
         this.goToDelete(isbn);
-        this.$router.push({path:'/list', query:{}});
+        
       }
       
+      //  
       // this.$store.commit('currenrBook()');
       //this.$emit('openModal', isbn);
     },
+
 
     test: function(book) {
       alert(book.title);
@@ -174,7 +179,11 @@ export default {
     async getBooklist() {
       let url = "http://127.0.0.1:8001/book/";
       let book = await this.$api(url, "get", {});
-      this.books = book.output;
+      if (book.rows > 0) {
+        //console.log(book.rows);
+        this.books = book.output;
+      }
+      
       //console.log(this.books);
     },
     async getBookDetail(isbn) {
@@ -189,12 +198,14 @@ export default {
       this.$router.push({path:'/detail', query:{isbn:isbn, id:id}}); 
     },
     async goToDelete(isbn) {
+
       let bookDelete = await this.$api("http://localhost:8001/book/", "delete", {isbn});
       if(bookDelete.rows > 0) {
         this.bookDelete = bookDelete.output;
-        console.log("if");
+        //console.log("if");
+        this.getBooklist();
       }
-      this.getBooklist();
+      //this.getBooklist();
       
       
       //console.log("this.bookDelete");
@@ -207,3 +218,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #tableId tr {
+    cursor: pointer;
+  } 
+</style>

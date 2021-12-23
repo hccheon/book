@@ -20,7 +20,7 @@
         <form>
           <div class="mt-3">
             <label for="isbn" class="form-label">ISBN</label>
-            <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfo(isbn)" autofocus>
+            <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfo(isbn)">
             <div id="isbnHelp" class="form-text text-primary">바코드스캐너를 이용하세요.</div>
           </div>
           <div class="mt-3" v-show="imgSrc">
@@ -44,7 +44,7 @@
           </div>
           <div class="mt-3">
             <label for="library" class="form-label">서고</label>
-            <input type="text" class="form-control" id="library" v-model="library">
+            <input type="text" class="form-control" id="library" v-model="library" placeholder="혁신지원팀 캐비넷">
           </div>
         </form>
       </div>
@@ -63,10 +63,11 @@ export default {
       title: '',
       author: '',
       publisher: '',
-      library: '혁신지원팀 캐비넷'
+      library: ''
     }
   },
   created() {
+    
     //this.getBookList();
     /* axios.get('https://api.hnpwa.com/v0/news/1.json')
       .then(function(response) {
@@ -77,6 +78,9 @@ export default {
       }); */
   },
   mounted() {
+    this.setFocus();
+  },
+  updated() {
     
   },
   methods: {
@@ -89,7 +93,7 @@ export default {
       this.title = book.rss.channel.item.title._text;
       this.author = book.rss.channel.item.author._text;
       this.publisher = book.rss.channel.item.publisher._text;
-      //document.getElementById("library").focus();
+      document.getElementById("library").focus();
     },
     
     async postBookAdd(isbn) {
@@ -105,9 +109,21 @@ export default {
       let book = await this.$api(url, "post", bookInfo);
       console.log(book);
       this.isbn = '';
+      this.title = '';
+      this.author = '';
+      this.publisher = '';
+      this.imgSrc = '';
+      this.sendModal(this.title);
       document.getElementById("isbn").focus();
       //this.$router.push({path:'/list', query:{}}); 
     },
+    setFocus() {
+      document.getElementById("isbn").focus();
+    },
+    sendModal(title) {
+      window.confirm(title + " 등록되었습니다.");  
+    },
+
   }
 }
 </script>
