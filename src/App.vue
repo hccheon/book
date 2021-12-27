@@ -21,9 +21,26 @@
                 <router-link class="nav-link disabled" to="/home">대출</router-link>
               </li>
             </ul>
-            <form class="d-flex" @submit.prevent="search(this.searchText)">
+            <!-- 검색창 -->
+            <!-- <form class="d-flex" @submit.prevent="search(this.searchText)">
               <input class="form-control me-2" type="search" placeholder="Search" v-model="searchText" >
               <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> -->
+
+            <!-- 검색창dropdown -->
+            <form class="d-flex" @submit.prevent="search(ddVm.selectedValue, searchText)">
+              <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{ ddVm.selectedText }}</button>
+                <ul class="dropdown-menu">
+                  <li :key="i" :value="option.value" v-for="(option,i) in ddVm.options"><a class="dropdown-item" @click="selectCategory(option)" href="javascript:void(0)">{{option.text}}</a></li>
+                  <!-- <li><a class="dropdown-item" href="javascript:void(0)">저자</a></li>
+                  <li><a class="dropdown-item" href="javascript:void(0)">출판사</a></li>
+                  <li><a class="dropdown-item" href="javascript:void(0)">ISBN</a></li> -->
+                </ul>
+                <!-- <input type="text" class="form-control" aria-label="Text input with dropdown button"> -->
+                <input class="form-control me-2" type="search" placeholder="Search" v-model="searchText" >
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </div>
             </form>
           </div>
         </div>
@@ -39,31 +56,44 @@ export default {
   data() {
     return {
       searchText: '',
+      ddVm: {
+        selectedValue: "title",
+        selectedText: "제목",
+        options: [
+          {
+            "value": "title",
+            "text": "제목"
+          },
+          {
+            "value": "author",
+            "text": "저자"
+          },
+          {
+            "value": "publisher",
+            "text": "출판사"
+          },
+          {
+            "value": "isbn",
+            "text": "ISBN"
+          },
+        ]
+      },
     }
   },
   methods: {
-    eventTest() {
-      console.log('success');
+    selectCategory(option) {
+      this.ddVm.selectedValue = option.value;
+      this.ddVm.selectedText = option.text;
+      //console.log('success ' + this.ddVm.selectedValue + this.ddVm.selectedText);
     },
 
-    search(searchText) {
-      //console.log('search');
-      console.log(searchText);
-      //this.searchText = '';
-      //document.getElementsByName("SearchInput").reset;
-      //this.$router.push({path:'/search', query:{}});
-      this.$router.push({path:'/search', query:{pa:searchText}});
+    search(searchValue, searchText) {
+      //console.log(searchValue);
+      //console.log(searchText);
+      
+      //this.$router.push({path:'/search', query:{pa:searchText}});
+      this.$router.push({path:'/search', query:{searchValue:searchValue, searchText:searchText}});
     }
-
-    /* openModal(isbn) {
-      console.log('app=' + isbn);
-      this.stateId = isbn;
-      this.isModalAct = true;
-    },
-    closeModal() {
-      this.stateId = '';
-      this.isModalAct =false;
-    } */
   },
   components: {
     //Modal

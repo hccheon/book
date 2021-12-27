@@ -18,6 +18,8 @@
                 </div>
               </div>
 
+              
+
               <!-- Modal -->
               <!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -83,6 +85,9 @@
                   </tr>
                 </tbody>
               </table>
+
+              
+
           </div>
       </main>
   </div>
@@ -96,7 +101,8 @@ export default {
       isbn: '',
       bookDetail: [],
       bookDelete: [],
-      param: '9791165920760'
+      param: '9791165920760',
+
     }
   },
   props: {
@@ -107,9 +113,12 @@ export default {
   components: {
   },
   created() {
-    console.log('params= ' + this.$route.query.pa);
-    this.param = this.$route.query.pa;
+    //console.log('params= ' + this.$route.query.searchValue + ' ' + this.$route.query.searchText);
+    //console.log('params= ' + this.$route.query.searchValue + "/" + this.$route.query.searchText);
+    this.param = this.$route.query.searchValue + "/" + this.$route.query.searchText;
     this.getBookSearch(this.param);
+
+
     //console.log(this.searchValue);
     /* axios.get('https://api.hnpwa.com/v0/news/1.json')
       .then(function(response) {
@@ -177,9 +186,13 @@ export default {
       //console.log(this.books);
     },
     async getBookSearch(param) {
-      let url = "http://127.0.0.1:8001/book/isbn/" + param;
+      let url = "http://127.0.0.1:8001/book/" + param;
       let book = await this.$api(url, "get", {});
-      this.books = book.output;
+      if (book.rows > 0) {
+        //console.log(book.rows);
+        this.books = book.output;
+      }
+      //this.books = book.output;
       //console.log(this.books);
     },
     async getBookDetail(isbn) {
