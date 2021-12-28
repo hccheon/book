@@ -56,10 +56,10 @@
                     <th scope="row">{{ i+1 }}</th>
                     <!-- <td><img :src="`{{ book.link }}`" alt="빈표지" width="25px" height="25px">{{ imSrc }}</td> -->
                     <!-- <td>{{ book.link }}</td> -->
-                    <td>{{ book.title }}</td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.publisher }}</td>
-                    <td>{{ book.isbn }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.title }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.author }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.publisher }}</td>
+                    <td @click="goToDetail(book.isbn, book._id);">{{ book.isbn }}</td>
                     <td>
                       <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                         <button class="btn btn-warning me-md-2" type="button" @click="goToDetail(book.isbn, book._id);">
@@ -222,3 +222,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  #tableId tr {
+    cursor: pointer;
+  } 
+</style>

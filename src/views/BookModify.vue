@@ -6,16 +6,13 @@
           <div class="col-lg-3 col-mid-6">
             <div class="card" style="width: 18rem;">
               <!-- <img src="..." class="card-img-top" alt="..."> -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
-                            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
-                        </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+              </svg>
               <div class="card-body">
-                <h2 class="card-title">대출/반납</h2>
-                <!-- <a href="#" class="btn btn-primary" @click="gotoLendReturn(isbn, id)">대출/반납</a> -->
-                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                  <button type="button" class="btn btn-primary" @click="gotoLend(isbn, id)">대출</button>
-                  <button type="button" class="btn btn-success" @click="gotoReturn(isbn, id)">반납</button>
-                </div>
+                <h2 class="card-title">도서 등록/수정</h2>
+                <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                <a href="#" class="btn btn-primary" @click="sendModal(id, title)">도서 등록/수정</a>
               </div>
             </div>
           </div>
@@ -26,39 +23,23 @@
             <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfoDB(isbn)" autofocus>
             <div id="isbnHelp" class="form-text text-primary">바코드스캐너를 이용하세요.</div>
           </div> -->
-          <div class="mt-5 mb-5" v-show="imgSrc">
+          <div class="mt-3" v-show="imgSrc">
             <label for="coverImage" class="form-label">표지 이미지</label>
             <!-- <input type="text" class="form-control" id="coverImage" v-model="imgSrc"> -->
             <div>
               <img :src=imgSrc class="img-responsive" alt="이미지를 찾을 수 없습니다.">
             </div>
           </div>
-          <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon1">제 목</span>
-            <label type="text" class="form-control" id="title">{{ title }}</label>
+          <div class="mt-3">
+            <label for="bookTitle" class="form-label">제목</label>
+            <input type="text" class="form-control" id="bookTitle" v-model="title">
           </div>
-          <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon2">ISBN</span>
-            <label type="text" class="form-control" id="isbn">{{ isbn }}</label>
+          <div class="mt-3">
+            <label for="isbn" class="form-label">ISBN</label>
+            <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfoDB(isbn)">
+            <!-- <div id="isbnHelp" class="form-text text-primary">바코드스캐너를 이용하세요.</div> -->
           </div>
-          <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon3">저 자</span>
-            <label type="text" class="form-control" id="author">{{ author }}</label>
-          </div>
-          <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon4">출판사</span>
-            <label type="text" class="form-control" id="publisher">{{ publisher }}</label>
-          </div>
-          <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon5">수 량</span>
-            <label type="text" class="form-control" id="qty">{{ qty }}</label>
-          </div>
-          <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon6">서 고</span>
-            <label type="text" class="form-control" id="library">{{ library }}</label>
-          </div>
-
-          <!-- <div class="mt-3">
+          <div class="mt-3">
             <label for="author" class="form-label">저자</label>
             <input type="text" class="form-control" id="author" v-model="author">
           </div>
@@ -67,14 +48,13 @@
             <input type="text" class="form-control" id="publisher" v-model="publisher">
           </div>
           <div class="mt-3">
-            <label for="isbn" class="form-label">ISBN</label>
-            <input type="text" class="form-control" id="isbn" v-model="isbn" @keypress.enter="getBookInfoDB(isbn)" autofocus>
-          </div> -->
-            <!-- <div id="isbnHelp" class="form-text text-primary">바코드스캐너를 이용하세요.</div> -->
-          <!-- <div class="mt-3">
+            <label for="publisher" class="form-label">수량</label>
+            <input type="number" class="form-control" id="qty" v-model="qty">
+          </div>
+          <div class="mt-3">
             <label for="library" class="form-label">서고</label>
-            <input type="text" class="form-control" id="library" placeholder="혁신지원팀 캐비넷" v-model="library">
-          </div> -->
+            <input type="text" class="form-control" id="library" placeholder="혁신지원팀 캐비넷" v-model="library" autofocus>
+          </div>
         </form>
       </div>
     </main>
@@ -152,7 +132,7 @@ export default {
       let url = "http://localhost:8001/book/isbn/" + isbn;
       //console.log(url);
       let book = await this.$api(url, "get", {});
-      //console.log(book.output[0]);
+      console.log(book.output[0]);
       this.books = book.output;
       this.imgSrc = book.output[0].link;
       this.title = book.output[0].title;
@@ -161,7 +141,7 @@ export default {
       this.id = book.output[0]._id;
       this.qty = book.output[0].qty;
       this.library = book.output[0].library;
-      //document.getElementById("library").focus();
+      this.setFocus();
     },
     sendModal(id, title) {
       if(window.confirm(title + "수정하시겠습니까?")){
@@ -169,9 +149,11 @@ export default {
         //console.log("del");
         this.postBookModify(this.id);
       }
-      
       // this.$store.commit('currenrBook()');
       //this.$emit('openModal', isbn);
+    },
+    setFocus() {
+      //document.getElemntById("library").focus();
     },
     async postBookModify(id) {
       let url = "http://localhost:8001/book/modify";
@@ -181,28 +163,18 @@ export default {
         "publisher": this.publisher, 
         "link": this.imgSrc, 
         "isbn": this.isbn,
-        "_id": id
+        "_id": id,
+        "qty": this.qty,
+        "library": this.library,
       };
       console.log(bookInfo);
       let book = await this.$api(url, "post", bookInfo);
       console.log(book);
       this.$router.push({path:'/list', query:{}}); 
     },
-    goToModify(isbn, id) {
-      //console.log(isbn, id);
-      this.$router.push({path:'/modify', query:{isbn:isbn, id:id}}); 
-    },
-    gotoLend(isbn, id) {
-      console.log(isbn, id);
-      this.$router.push({path:'/lend', query:{isbn:isbn, id:id}}); 
-    },
   }
 }
 </script>
 <style scoped>
-  img {
-    
-      
-    
-  };
+  ::-webkit-outer-spin-button, ::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 </style>

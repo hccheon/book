@@ -12,7 +12,8 @@
               <div class="card-body">
                 <h2 class="card-title">도서 등록/수정</h2>
                 <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-                <a href="#" class="btn btn-primary" @click="postBookAdd(isbn)">도서 등록/수정</a>
+                <!-- <a href="#" class="btn btn-primary" @click="postBookAdd(isbn)">도서 등록/수정</a> -->
+                <a href="#" class="btn btn-primary" @click="validateInputs()">도서 등록/수정</a>
               </div>
             </div>
           </div>
@@ -43,8 +44,13 @@
             <input type="text" class="form-control" id="publisher" v-model="publisher">
           </div>
           <div class="mt-3">
+            <label for="publisher" class="form-label">수량</label>
+            <input type="number" class="form-control" id="qty" v-model="qty">
+          </div>
+          <div class="mt-3">
             <label for="library" class="form-label">서고</label>
             <input type="text" class="form-control" id="library" v-model="library" placeholder="혁신지원팀 캐비넷">
+            
           </div>
         </form>
       </div>
@@ -63,7 +69,8 @@ export default {
       title: '',
       author: '',
       publisher: '',
-      library: ''
+      library: '',
+      qty: 1
     }
   },
   created() {
@@ -96,25 +103,26 @@ export default {
       document.getElementById("library").focus();
     },
     
-    async postBookAdd(isbn) {
+    async postBookAdd() {
       let url = "http://localhost:8001/book/";
       let bookInfo = {
         "title": this.title, 
         "author": this.author, 
         "publisher": this.publisher, 
         "link": this.imgSrc, 
-        "isbn": isbn, 
+        "isbn": this.isbn, 
+        "qty": this.qty, 
+        "library": this.library, 
       };
       console.log(bookInfo);
       let book = await this.$api(url, "post", bookInfo);
       console.log(book);
-      this.isbn = '';
+      /* this.isbn = '';
       this.title = '';
       this.author = '';
       this.publisher = '';
       this.imgSrc = '';
-      this.sendModal(this.title);
-      document.getElementById("isbn").focus();
+      this.library = ''; */
       //this.$router.push({path:'/list', query:{}}); 
     },
     setFocus() {
@@ -123,7 +131,37 @@ export default {
     sendModal(title) {
       window.confirm(title + " 등록되었습니다.");  
     },
+    validateInputs() {
+      if (this.title != '' &&
+          this.isbn != '' &&
+          this.author != '' &&
+          this.publisher != '' &&
+          this.qty > 0 &&
+          this.library != '') {
+        
+        this.postBookAdd();
+        //console.log("validated");
+        //this.sendModal(this.title);
+        this.isbn = '';
+        this.title = '';
+        this.author = '';
+        this.publisher = '';
+        this.imgSrc = '';
+        this.library = '';
+        this.setFocus();
+
+      } else if (this.imgSrc != '') {
+        alert('표지 이미지가 없습니다.');
+
+      } else {
+        alert('잘못된 책 정보입니다. 책 정보를 확인하세요');
+      }
+      
+    }
 
   }
 }
 </script>
+<style scoped>
+  ::-webkit-outer-spin-button, ::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+</style>

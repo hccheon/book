@@ -38,7 +38,7 @@
                   <li><a class="dropdown-item" href="javascript:void(0)">ISBN</a></li> -->
                 </ul>
                 <!-- <input type="text" class="form-control" aria-label="Text input with dropdown button"> -->
-                <input class="form-control me-2" type="search" placeholder="Search" v-model="searchText" >
+                <input id="input-submit" class="form-control me-2" type="search" placeholder="Search" v-model="searchText" >
                 <button class="btn btn-outline-success" type="submit">Search</button>
               </div>
             </form>
@@ -65,6 +65,10 @@ export default {
             "text": "제목"
           },
           {
+            "value": "isbn",
+            "text": "ISBN"
+          },
+          {
             "value": "author",
             "text": "저자"
           },
@@ -72,18 +76,16 @@ export default {
             "value": "publisher",
             "text": "출판사"
           },
-          {
-            "value": "isbn",
-            "text": "ISBN"
-          },
         ]
       },
     }
   },
+  
   methods: {
     selectCategory(option) {
       this.ddVm.selectedValue = option.value;
       this.ddVm.selectedText = option.text;
+      document.getElementById("input-submit").focus();
       //console.log('success ' + this.ddVm.selectedValue + this.ddVm.selectedText);
     },
 
@@ -92,6 +94,7 @@ export default {
       //console.log(searchText);
       
       //this.$router.push({path:'/search', query:{pa:searchText}});
+      this.searchText = '';
       this.$router.push({path:'/search', query:{searchValue:searchValue, searchText:searchText}});
     }
   },
