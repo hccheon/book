@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     async getBookInfo(isbn) {
-      let url = "http://localhost:8001/search/d_isbn/" + isbn;
+      let url = "http://203.254.143.87:8001/search/d_isbn/" + isbn;
       //console.log(url);
       let book = await this.$api(url, "get", {});
       //console.log(book);
@@ -95,7 +95,7 @@ export default {
       console.log('entered');
     },
     async postBookAdd(isbn) {
-      let url = "http://localhost:8001/book/";
+      let url = "http://203.254.143.87:8001/book/";
       let bookInfo = {
         "title": this.title, 
         "author": this.author, 

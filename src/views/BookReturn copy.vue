@@ -6,17 +6,12 @@
           <div class="col-lg-3 col-mid-6">
             <div class="card" style="width: 18rem;">
               <!-- <img src="..." class="card-img-top" alt="..."> -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
-                            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
-                        </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+              </svg>
               <div class="card-body">
-                <h2 class="card-title">대출</h2>
-                <!-- <a href="#" class="btn btn-primary" @click="gotoLendReturn(isbn, id)">대출/반납</a> -->
-                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                  <button type="button" class="btn btn-primary" v-if="lendable" @click="gotoLend(isbn, id)">대출</button>
-                  <button type="button" class="btn btn-primary" v-else disabled>대출</button>
-                  <!-- <button type="button" class="btn btn-success" @click="gotoReturn(isbn, id)">반납</button> -->
-                </div>
+                <h2 class="card-title">반납</h2>
+                <a href="#" class="btn btn-primary" @click="gotoLendReturn(isbn, id)">반납완료</a>
               </div>
             </div>
           </div>
@@ -51,14 +46,21 @@
             <label type="text" class="form-control" id="publisher">{{ publisher }}</label>
           </div>
           <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon5">수량</span>
-            <label type="text" class="form-control" id="qty">{{ c_qty }}/{{ t_qty }}</label>
+            <span class="input-group-text" id="basic-addon5">수 량</span>
+            <label type="text" class="form-control" id="qty">{{ qty }}</label>
           </div>
           <div class="input-group mb-5">
             <span class="input-group-text" id="basic-addon6">서 고</span>
             <label type="text" class="form-control" id="library">{{ library }}</label>
           </div>
-
+          <div class="input-group mb-5">
+            <span class="input-group-text" id="basic-addon6">등록번호</span>
+            <label type="text" class="form-control" id="regnum">{{ regnum }}</label>
+          </div>
+          <div class="input-group mb-5">
+            <span class="input-group-text" id="basic-addon6">신청인</span>
+            <input type="text" class="form-control" id="user" v-model="user" ref="user" autofocus>
+          </div>
           <!-- <div class="mt-3">
             <label for="author" class="form-label">저자</label>
             <input type="text" class="form-control" id="author" v-model="author">
@@ -95,17 +97,9 @@ export default {
       publisher: '',
       library: '',
       id: '',
-      c_qty: 0,
-      t_qty: 0,
-    }
-  },
-  computed: {
-    lendable() {
-      if(this.c_qty==0) {
-        return false;
-      } else {
-        return true;
-      }
+      qty: 0,
+      regnum: 0,
+      user: ''
     }
   },
   created() {
@@ -117,22 +111,32 @@ export default {
       .catch(function(error) {
         console.log(error);
       }); */
-      //this.isbn =  this.$route.query.isbn;
+      this.isbn =  this.$route.query.isbn;
       this.id =  this.$route.query.id;
-      this.getBookInfoId(this.id);
+      this.getBookInfoDB(this.isbn);
   },
   mounted() {
     //this.getBookInfo();
-    if (this.isbn != '') {
-      //console.log(this.isbn);
-      //this.getBookInfo(this.isbn);
-    }
+    
     //document.getElementById("isbn").focus();
   },
+  updated() {
+    this.$refs.user.focus();
+  },
   methods: {
-    async getBookInfoId(id) {
-      
-      /* let bookDetail = await this.$api("http://203.254.143.87:8001/book/isbn/" + isbn, "get", {});
+    async getBookInfo(isbn) {
+      /* let url = "http://203.254.143.87:8001/search/d_isbn/" + isbn;
+      //console.log(url);
+      let book = await this.$api(url, "get", {});
+      //console.log(book);
+      this.imgSrc = book.rss.channel.item.image._text;
+      this.title = book.rss.channel.item.title._text;
+      this.author = book.rss.channel.item.author._text;
+      this.publisher = book.rss.channel.item.publisher._text;
+      //this.id = book.rss.channel.item._id._text;
+      document.getElementById("library").focus(); */
+
+      let bookDetail = await this.$api("http://203.254.143.87:8001/book/isbn/" + isbn, "get", {});
       console.log(bookDetail);
       this.imgSrc = bookDetail.output.link;
       this.isbn = bookDetail.output.isbn;
@@ -142,22 +146,13 @@ export default {
       this.id = bookDetail.output._id;
       this.qty = bookDetail.output.qty;
       this.library = bookDetail.output.library;
-      console.log(this.imgSrc); */
-
-      let bookDetail = await this.$api("http://203.254.143.87:8001/book/id", "post", {id:id});
-      //console.log(bookDetail);
-      this.imgSrc = bookDetail.output[0].link;
-      this.isbn = bookDetail.output[0].isbn;
-      this.title = bookDetail.output[0].title;
-      this.author = bookDetail.output[0].author;
-      this.publisher = bookDetail.output[0].publisher;
-      this.id = bookDetail.output[0]._id;
-      this.qty = bookDetail.output[0].qty;
-      this.t_qty = bookDetail.output[0].t_qty;
-      this.c_qty = bookDetail.output[0].c_qty;
-      this.library = bookDetail.output[0].library;
-      //console.log(this.imgSrc);
-      
+      console.log(this.imgSrc);
+      /* if(bookDetail.rows > 10) {
+        this.imgSrc = bookDetail..rss.channel.item.image._text;
+        this.title = book.rss.channel.item.title._text;
+        this.author = book.rss.channel.item.author._text;
+        this.publisher = book.rss.channel.item.publisher._text;
+      } */
     },
     async getBookInfoDB(isbn) {
       let url = "http://203.254.143.87:8001/book/isbn/" + isbn;
@@ -174,9 +169,7 @@ export default {
       this.library = book.output[0].library;
       //document.getElementById("library").focus();
     },
-    
     sendModal(id, title) {
-      
       if(window.confirm(title + "수정하시겠습니까?")){
         //this.goToDelete(this.isbn);
         //console.log("del");
@@ -204,14 +197,6 @@ export default {
     goToModify(isbn, id) {
       //console.log(isbn, id);
       this.$router.push({path:'/modify', query:{isbn:isbn, id:id}}); 
-    },
-    gotoLend(isbn, id) {
-      //console.log(isbn, id);
-      this.$router.push({path:'/lend', query:{isbn:isbn, id:id}}); 
-    },
-    gotoReturn(isbn, id) {
-      //console.log(isbn, id);
-      this.$router.push({path:'/return', query:{isbn:isbn, id:id}}); 
     },
   }
 }

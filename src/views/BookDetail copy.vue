@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     async getBookInfo(isbn) {
-      /* let url = "http://localhost:8001/search/d_isbn/" + isbn;
+      /* let url = "http://203.254.143.87:8001/search/d_isbn/" + isbn;
       //console.log(url);
       let book = await this.$api(url, "get", {});
       //console.log(book);
@@ -125,7 +125,7 @@ export default {
       //this.id = book.rss.channel.item._id._text;
       document.getElementById("library").focus(); */
 
-      let bookDetail = await this.$api("http://localhost:8001/book/isbn/" + isbn, "get", {});
+      let bookDetail = await this.$api("http://203.254.143.87:8001/book/isbn/" + isbn, "get", {});
       console.log(bookDetail);
       this.imgSrc = bookDetail.output.link;
       this.isbn = bookDetail.output.isbn;
@@ -144,7 +144,7 @@ export default {
       } */
     },
     async getBookInfoDB(isbn) {
-      let url = "http://localhost:8001/book/isbn/" + isbn;
+      let url = "http://203.254.143.87:8001/book/isbn/" + isbn;
       //console.log(url);
       let book = await this.$api(url, "get", {});
       //console.log(book.output[0]);
@@ -169,7 +169,7 @@ export default {
       //this.$emit('openModal', isbn);
     },
     async postBookModify(id) {
-      let url = "http://localhost:8001/book/modify";
+      let url = "http://203.254.143.87:8001/book/modify";
       let bookInfo = {
         "title": this.title, 
         "author": this.author, 

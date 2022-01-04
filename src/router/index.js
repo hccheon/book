@@ -6,7 +6,9 @@ import BookDetail from '../views/BookDetail.vue'
 import BookModify from '../views/BookModify.vue'
 import BookAdd from '../views/BookAdd.vue'
 import BookSearch from '../views/BookSearch.vue'
+import BookLendList from '../views/BookLendList.vue'
 import BookLend from '../views/BookLend.vue'
+import BookReturn from '../views/BookReturn.vue'
 
 const routes = [
   {
@@ -49,9 +51,19 @@ const routes = [
     component: BookSearch
   },
   {
+    path: '/lendlist',
+    name: 'LendList',
+    component: BookLendList
+  },
+  {
     path: '/lend',
     name: 'LendBook',
     component: BookLend
+  },
+  {
+    path: '/return',
+    name: 'ReturnBook',
+    component: BookReturn
   },
   {
     path: '/about',
